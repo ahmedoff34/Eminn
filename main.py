@@ -3,7 +3,7 @@ from telegram import Bot
 from telegram.ext import Updater, CommandHandler
 
 # Bot Tokenini buraya ekle
-TOKEN = 'YOUR_BOT_TOKEN'
+TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
 
 # Kullanıcı botunun oturumunu temsil eden sınıf
 class UserBot:
