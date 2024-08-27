@@ -11,11 +11,8 @@ api_id = '28603118'
 api_hash = '35a400855835510c0a926f1e965aa12d'
 session_string = 'AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA'
 
-# Telethon müştərisi yaradılır
-client = TelegramClient('anon', api_id, api_hash)
-
-# Session string istifadə edilərək müştəri girişini başlatmaq
-client = client.start(session=session_string)
+# Müştərini başlatmaq
+client = TelegramClient(session_string, api_id, api_hash)
 
 # Telegram botu yaradılır
 app = ApplicationBuilder().token(TOKEN).build()
@@ -53,6 +50,7 @@ print("Bot və Telethon müştərisi işə salındı.")
 
 # Bot və Telethon müştərisini eyni anda işə salmaq
 async def main():
+    await client.start()  # Müştərini başlat
     await app.initialize()
     await app.start()
     await app.run_polling()  # app.updater.start_polling() əvəzinə
