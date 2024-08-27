@@ -2,7 +2,7 @@ import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telethon import TelegramClient
-from telethon.errors import FloodWait, RpcCallFailError
+from telethon.errors.rpcerrorlist import RpcCallFailError, FloodWaitError
 import time
 
 # Bot Tokenini buraya ekleyin
@@ -57,7 +57,7 @@ async def main():
             await app.run_polling()
             await client.disconnect()
             break
-        except (ConnectionRefusedError, RpcCallFailError) as e:
+        except (ConnectionRefusedError, RpcCallFailError, FloodWaitError) as e:
             print(f"Bağlantı hatası ({attempt+1}/{attempts}): {str(e)}")
             await asyncio.sleep(5)  # 5 saniyə gözləmə və yenidən deneme
         except Exception as e:
