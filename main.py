@@ -1,23 +1,21 @@
 import time
-from telegram import Bot, Update
+from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
+from telethon import TelegramClient, events
 
-# Bot Tokenini buraya ekle
+# Bot Tokenini buraya ekleyin
 TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
 
-# Kullanıcı botunun oturumunu temsil eden sınıf
-class UserBot:
-    def __init__(self, session_id):
-        self.session_id = session_id
+# Telethon API ID ve Hash
+api_id = '28603118'
+api_hash = '35a400855835510c0a926f1e965aa12d'
+session_string = 'AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA'  # Daha önce oluşturduğunuz session string
 
-    def send_message(self, user_id, message):
-        # Burada kullanıcı hesabını kullanarak mesaj gönderme kodunu ekle
-        print(f"UserBot {self.session_id} gönderiyor: {message} -> {user_id}")
+# Telethon istemcisi oluşturuluyor
+client = TelegramClient('anon', api_id, api_hash)
+client.start(session_string=session_string)
 
-# Kullanıcı botunun oturumunu oluştur
-user_bot = UserBot('AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA')
-
-# Botunuzu oluşturun
+# Telegram botu oluşturuluyor
 app = ApplicationBuilder().token(TOKEN).build()
 
 async def start(update: Update, context: CallbackContext):
@@ -25,19 +23,21 @@ async def start(update: Update, context: CallbackContext):
     await update.message.reply_text(welcome_message)
 
 async def send_to_users(update: Update, context: CallbackContext):
-    message = ' '.join(context.args[1:])  # Komuttan sonra gelen mesajı al
-    if not message:
+    if len(context.args) < 1:
         await update.message.reply_text('Mesaj sağlamalısınız.')
         return
 
+    message = ' '.join(context.args)  # Komuttan sonra gelen tüm mesajı al
     chat_id = update.message.chat_id
 
     try:
+        # Grup yöneticilerini al
         members = await context.bot.get_chat_administrators(chat_id)
         user_ids = [member.user.id for member in members if member.user.id != context.bot.id]
 
         for user_id in user_ids:
-            user_bot.send_message(user_id, message)  # Kullanıcı botu ile mesaj gönder
+            # Telethon kullanarak gerçek Telegram hesabından mesaj gönderme
+            await client.send_message(user_id, message)
             time.sleep(2)  # Spam olmaması için 2 saniye bekleme süresi
     except Exception as e:
         await update.message.reply_text(f'Hata: {str(e)}')
@@ -47,6 +47,7 @@ app.add_handler(CommandHandler('start', start))
 app.add_handler(CommandHandler('send', send_to_users))
 
 # Başlama logu
-print("Bot başlatıldı.")
+print("Bot ve Telethon istemcisi başlatıldı.")
 
-app.run_polling()
+# Hem botu hem de Telethon istemcisini çalıştır
+client.loop.run_until_complete(app.run_polling())
