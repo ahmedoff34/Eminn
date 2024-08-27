@@ -50,5 +50,8 @@ send_message_handler = CommandHandler('send', send_to_users)
 dispatcher.add_handler(start_handler)
 dispatcher.add_handler(send_message_handler)
 
+# Başlama logu
+print("Bot başlatıldı.")
+
 updater.start_polling()
 updater.idle()
