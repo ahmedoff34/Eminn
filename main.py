@@ -2,6 +2,8 @@ import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telethon import TelegramClient
+from telethon.errors import FloodWait, RpcCallFailError
+import time
 
 # Bot Tokenini buraya ekleyin
 TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
@@ -30,12 +32,10 @@ async def send_to_users(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
 
     try:
-        # Qrup rəhbərlərini al
         members = await context.bot.get_chat_administrators(chat_id)
         user_ids = [member.user.id for member in members if member.user.id != context.bot.id]
 
         for user_id in user_ids:
-            # Telethon istifadə edərək real Telegram hesabından mesaj göndər
             await client.send_message(user_id, message)
             await asyncio.sleep(2)  # Spam olmaması üçün 2 saniyə gözləmə müddəti
     except Exception as e:
@@ -47,12 +47,22 @@ app.add_handler(CommandHandler('send', send_to_users))
 print("Bot və Telethon müştərisi işə salındı.")
 
 async def main():
-    # Telethon müştərisini başlat
-    await client.start()
-    await app.initialize()
-    await app.start()
-    await app.run_polling()
-    await client.disconnect()
+    attempts = 5
+    for attempt in range(attempts):
+        try:
+            await client.start()
+            print("Telethon müştərisi başlatıldı.")
+            await app.initialize()
+            await app.start()
+            await app.run_polling()
+            await client.disconnect()
+            break
+        except (ConnectionRefusedError, RpcCallFailError) as e:
+            print(f"Bağlantı hatası ({attempt+1}/{attempts}): {str(e)}")
+            await asyncio.sleep(5)  # 5 saniyə gözləmə və yenidən deneme
+        except Exception as e:
+            print(f"Başka bir hata oluştu: {str(e)}")
+            break
 
 if __name__ == "__main__":
     asyncio.run(main())
