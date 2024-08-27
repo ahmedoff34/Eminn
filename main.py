@@ -15,7 +15,7 @@ class UserBot:
         print(f"UserBot {self.session_id} gönderiyor: {message} -> {user_id}")
 
 # Kullanıcı botunun oturumunu oluştur
-user_bot = UserBot('SESSION_ID_1')
+user_bot = UserBot('AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA')
 
 # Botunuzu oluşturun
 app = ApplicationBuilder().token(TOKEN).build()
