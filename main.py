@@ -13,7 +13,9 @@ session_string = 'AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXu
 
 # Telethon istemcisi oluşturuluyor
 client = TelegramClient('anon', api_id, api_hash)
-client.start(session_string=session_string)
+
+# Session string istifadə edilərək müştəri girişini başlatmaq
+client = client.start(session=session_string)
 
 # Telegram botu oluşturuluyor
 app = ApplicationBuilder().token(TOKEN).build()
@@ -47,7 +49,7 @@ app.add_handler(CommandHandler('start', start))
 app.add_handler(CommandHandler('send', send_to_users))
 
 # Başlama logu
-print("Bot ve Telethon istemcisi başlatıldı.")
+print("Bot və Telethon istemcisi başlatıldı.")
 
 # Bot ve Telethon istemcisini aynı anda çalıştır
 async def main():
