@@ -1,7 +1,7 @@
 import time
 from telegram import Bot
-from telegram.ext import Updater, CommandHandler, CallbackContext, Update
-
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
 # Bot Tokenini buraya ekle
 TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
 
