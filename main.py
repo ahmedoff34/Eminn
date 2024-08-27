@@ -1,7 +1,7 @@
 import time
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
-from telethon import TelegramClient, events
+from telethon import TelegramClient
 
 # Bot Tokenini buraya ekleyin
 TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
@@ -9,7 +9,7 @@ TOKEN = '7024230778:AAGTFI1s7RXz2LNro55NJIO6NVcKSZMwmR8'
 # Telethon API ID ve Hash
 api_id = '28603118'
 api_hash = '35a400855835510c0a926f1e965aa12d'
-session_string = 'AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA'  # Daha önce oluşturduğunuz session string
+session_string = 'AgG0cu4AkaIhaB1uFYRvyzOsg-5vaJ7KVPZ-0wghtchiDQDMyjKB6LJdGukLXukl4SR_gr95l-037v6ST0F1vVf458uUUPq_CBOkyk9a8Bb8I39W2Hi1gbDKqVId3NxmnFgsSbLPj1xQtZ5HsDzDXcUVtpfMFiC858P4vc97uFyQd8KpYmjXyMN2XpgT7kI4DA-mVDbegJUVMTwSgue37mdHUF2W_tnFuW4cLQxLT18CQH9UVjpKDzCQi9GBakGDPvm1zVtyWBVj9RcDIfSXu18B1n9V-qV_zxEb0LjtswKCEQPCJWvTTjpGEcyX5z-Q5NQUJGLNt5PQwsBJl03D4WdfFwXsWQAAAAFOeNglAA'
 
 # Telethon istemcisi oluşturuluyor
 client = TelegramClient('anon', api_id, api_hash)
@@ -49,5 +49,14 @@ app.add_handler(CommandHandler('send', send_to_users))
 # Başlama logu
 print("Bot ve Telethon istemcisi başlatıldı.")
 
-# Hem botu hem de Telethon istemcisini çalıştır
-client.loop.run_until_complete(app.run_polling())
+# Bot ve Telethon istemcisini aynı anda çalıştır
+async def main():
+    await app.initialize()
+    await app.start()
+    await client.start()
+    await app.updater.start_polling()
+    await app.updater.idle()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())
